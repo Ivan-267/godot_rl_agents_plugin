@@ -1,3 +1,13 @@
+## Experimental/testing gdscript inference branch:
+
+This is an experimental branch that enables using gdscript inference instead of C# inference.
+It is based on the [Gdscript Neural Network Experiment](https://github.com/Ivan-267/GdscriptNeuralNetExperiment) repository (MIT licensed) with 
+additional code added to load parameters from SB3 trained models, and run inference with GDRL.
+
+Note that this is a very basic gdscript implementation, it might work slow, have bugs, or etc. No warranties are provided. If possible, you should use C# inference instead.
+
+## Usage:
+[To be added]
 
 # Godot RL Agents
 
