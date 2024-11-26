@@ -38,7 +38,7 @@ Limitations: Beside the perfomance limitations mentioned, currently this only su
 
 ### 3 - Adjusting inference to load the params based on the current model:
 - Open the script for the sync node (should be the `SyncGdscriptInference` script):
-- Find this line `policy = neural_network_loader.load_sb3_single_hidden_layer_policy_from_json(json_params)` and adjust it based on your policy. There are methods for loading a few different SB3 policies, here is how to export for each one:
+- Find this line `policy = neural_network_loader.load_sb3_single_hidden_layer_policy_from_json(json_params)` and adjust it based on your policy. There are methods for loading a few different SB3 policy architectures, here is how to export for each one:
 
 `neural_network_loader.load_sb3_single_hidden_layer_policy_from_json(json_params)`: Loads a policy trained with a single hidden layer in SB3. You can achieve this by adjusting your model params in the SB3 training script to e.g.
 ```Python
