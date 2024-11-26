@@ -53,7 +53,9 @@ Limitations: Beside the perfomance limitations mentioned, currently this only su
         )
     )
 ```
+
 `neural_network_loader.load_sb3_mlp_policy_from_json(json_params)`: Loads the standard MLP in SB3, you don't need to set any policy kwargs.
+
 `neural_network_loader.load_sb3_linear_policy_from_json(json_params)`: Loads a policy trained without hidden layers, e.g:
 ```Python
     model: PPO = PPO(
@@ -67,11 +69,12 @@ Limitations: Beside the perfomance limitations mentioned, currently this only su
         )
     )
 ```
-To import policies trained with other frameworks (e.g. CleanRL), or use a different number of layers, you can add your own loading function in `neural_network_loader.gd`, make sure to check the names used for weight and biases in the exported JSON.
+To import policies trained with other frameworks (e.g. CleanRL), or use a different number of layers, you can add your own loading function in `neural_network_loader.gd`, make sure to check the names used for weights and biases in the exported JSON.
 Compatability with other frameworks is not guaranteed.
 
 Note that it's best to use policies as simple/small as possible as the inference optimization is not optimized. Where possible, try linear. If not, try a single hidden layer network with a small number of neurons, etc.
 Again, this is more of a simple implementation for testing gdscript based inference rather than an optimized implementation, slowdowns or bugs can happen, so it's not recommended for production use.
+Breaking changes may also happen in case of future updates to this branch.
 
 # Godot RL Agents
 
