@@ -10,7 +10,7 @@ class LinearLayer:
 		var layer := LinearLayer.new()
 		layer.weights.resize(output_size)
 		layer.bias.resize(output_size)
-		layer.bias.fill(0)
+		#layer.bias.fill(0)
 
 		for output_idx in weights.size():
 			layer.weights[output_idx].resize(input_size)
@@ -30,7 +30,7 @@ class LinearLayer:
 
 		var output: Array[float]
 		output.resize(weights.size())
-		output.fill(0)
+		#output.fill(0)
 
 		for output_idx in weights.size():
 			for input_idx in weights[output_idx].size():
@@ -44,7 +44,7 @@ class TanhLayer:
 	func calculate_output(input: Array[float]) -> Array[float]:
 		var output: Array[float]
 		output.resize(input.size())
-		output.fill(0)
+		#output.fill(0)
 
 		for i in input.size():
 			output[i] = tanh(input[i])
