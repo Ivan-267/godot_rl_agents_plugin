@@ -22,7 +22,7 @@ You can also adjust the file path above.
 ### 2 - Copying the files and Replacing `sync` node:
 - It's recommended to make a backup of your project with the standard C# inference, just in case.
 
-- Copy the `neural_network` folder into your game project. You can also copy the addon folder if you haven't already loaded the GDRL plugin or if you want to use the version here for compatibility. (it's only tested with the version from this repository, and should work with [this version of GDRL](https://github.com/edbeeching/godot_rl_agents/tree/e1d89c99cb78a0224de23a408aec1fe99679a7e9), may or may not work.
+- Copy the `neural_network` folder into your game project. You can also copy the addon folder if you haven't already loaded the GDRL plugin or if you want to use the version here for compatibility. (it's only tested with the version from this repository, and should work with [this version of GDRL](https://github.com/edbeeching/godot_rl_agents/tree/e1d89c99cb78a0224de23a408aec1fe99679a7e9), may or may not work with newer versions).
 
 - Drag and drop the `neural_network > sync_gdscript_inference` node into your `Sync` node to replace the script.
 
