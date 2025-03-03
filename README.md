@@ -1,5 +1,5 @@
 # SF Onnx inference
-Quick experimental branch for a quick patch to make SF exported onnx inference work (it will make SB3/CleanRL inference not work).
+Quick experimental branch for a quick patch to make SF exported onnx inference work (it will make SB3/CleanRL/Rllib onnx export using the example scripts not work due to different inputs/outputs).
 
 # Godot RL Agents
 
