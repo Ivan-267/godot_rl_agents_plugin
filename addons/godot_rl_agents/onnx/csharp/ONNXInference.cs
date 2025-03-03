@@ -31,7 +31,7 @@ namespace GodotONNX
 			batchSize = BatchSize;
             SessionOpt = SessionConfigurator.MakeConfiguredSessionOptions();
             session = LoadModel(modelPath);
-            return session.OutputMetadata["output"].Dimensions[1];
+            return session.OutputMetadata["output_actions"].Dimensions[1];
         }
 
 
@@ -52,9 +52,9 @@ namespace GodotONNX
 			IReadOnlyCollection<NamedOnnxValue> inputs = new List<NamedOnnxValue>
 			{
 			NamedOnnxValue.CreateFromTensor("obs", new DenseTensor<float>(span, new int[] { batchSize, obs.Count })),
-			NamedOnnxValue.CreateFromTensor("state_ins", new DenseTensor<float>(new float[] { state_ins }, new int[] { batchSize }))
+			//NamedOnnxValue.CreateFromTensor("state_ins", new DenseTensor<float>(new float[] { state_ins }, new int[] { batchSize }))
 			};
-			IReadOnlyCollection<string> outputNames = new List<string> { "output", "state_outs" }; //ONNX is sensible to these names, as well as the input names
+			IReadOnlyCollection<string> outputNames = new List<string> { "output_actions" }; //ONNX is sensible to these names, as well as the input names
 
 			IDisposableReadOnlyCollection<DisposableNamedOnnxValue> results; 
 			//We do not use "using" here so we get a better exception explaination later
@@ -71,22 +71,22 @@ namespace GodotONNX
 			//Can't convert IEnumerable<float> to Variant, so we have to convert it to an array or something
 			Godot.Collections.Dictionary<string, Godot.Collections.Array<float>> output = new Godot.Collections.Dictionary<string, Godot.Collections.Array<float>>();
 			DisposableNamedOnnxValue output1 = results.First();
-			DisposableNamedOnnxValue output2 = results.Last();
+			//DisposableNamedOnnxValue output2 = results.Last();
 			Godot.Collections.Array<float> output1Array = new Godot.Collections.Array<float>();
-			Godot.Collections.Array<float> output2Array = new Godot.Collections.Array<float>();
+			//Godot.Collections.Array<float> output2Array = new Godot.Collections.Array<float>();
 
 			foreach (float f in output1.AsEnumerable<float>())
 			{
 				output1Array.Add(f);
 			}
 
-			foreach (float f in output2.AsEnumerable<float>())
-			{
-				output2Array.Add(f);
-			}
+			//foreach (float f in output2.AsEnumerable<float>())
+			//{
+			//	output2Array.Add(f);
+			//}
 
-			output.Add(output1.Name, output1Array);
-			output.Add(output2.Name, output2Array);
+			output.Add("output", output1Array);
+			//output.Add(output2.Name, output2Array);
 
 			//Output is a dictionary of arrays, ex: { "output" : [0.1, 0.2, 0.3, 0.4, ...], "state_outs" : [0.5, ...]}
 			results.Dispose();
