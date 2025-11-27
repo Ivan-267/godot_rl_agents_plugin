@@ -22,7 +22,7 @@ var camera_pixels = null
 ## If downscale_image is true, will display the downscaled image instead of rendered image.
 @export var display_downscaled_image: bool = true
 ## This is the resolution of the image that will be sent after downscaling
-@export var resized_image_resolution := Vector2(36, 36)
+@export var resized_image_resolution := Vector2i(36, 36)
 
 
 func _ready():
