@@ -54,8 +54,8 @@ var initialized = false
 var just_reset = false
 var onnx_model = null
 var n_action_steps = 0
-var keep_action = false
-var initial_obs = false
+var _keep_action = false
+var _initial_obs = false
 
 var _action_space_training: Array[Dictionary] = []
 var _action_space_inference: Array[Dictionary] = []
@@ -188,15 +188,16 @@ func _physics_process(_delta):
 
 	_demo_record_process()
 
-	if initial_obs:
+	if _initial_obs:
 		# At least one of the agents has resetted the game, get the action(s)
 		print("Initial state observed, get the actions")
-		initial_obs = false
+		_initial_obs = false
 	elif n_action_steps % action_repeat != 0:
 		if connected and _check_done_from_agents(agents_training):
 			# At least one of the agents has set done to true, initiate the learning asap
-			assert(not keep_action, "keep_action already set to true")
-			keep_action = true
+			assert(not _keep_action, "keep_action already set to true")
+			assert(not _initial_obs, "got an obs that is both a terminal state and an initial state")
+			_keep_action = true
 			print("Train all agents but keep previous actions at n_action_steps: ", n_action_steps)
 		else:
 			n_action_steps += 1
@@ -540,12 +541,12 @@ func handle_message() -> bool:
 		return handle_message()
 
 	if message["type"] == "action":
-		if not keep_action:
+		if not _keep_action:
 			var action = message["action"]
 			_set_agent_actions(action, agents_training)
 		else:
 			# keep the previously set action
-			keep_action = false
+			_keep_action = false
 		need_to_send_obs = true
 		get_tree().set_pause(false)
 		return true
@@ -566,7 +567,7 @@ func _reset_agents_if_done(agents = all_agents):
 	for agent in agents:
 		if agent.get_done():
 			agent.set_done_false()
-			initial_obs = true
+			_initial_obs = true
 
 
 func _reset_agents(agents = all_agents):
@@ -609,7 +610,7 @@ func _get_done_from_agents(agents: Array = agents_training):
 		var done = agent.get_done()
 		if done:
 			agent.set_done_false()
-			initial_obs = true
+			_initial_obs = true
 		dones.append(done)
 	return dones
 
