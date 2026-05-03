@@ -55,6 +55,7 @@ var just_reset = false
 var onnx_model = null
 var n_action_steps = 0
 var keep_action = false
+var initial_obs = false
 
 var _action_space_training: Array[Dictionary] = []
 var _action_space_inference: Array[Dictionary] = []
@@ -187,7 +188,11 @@ func _physics_process(_delta):
 
 	_demo_record_process()
 
-	if n_action_steps % action_repeat != 0:
+	if initial_obs:
+		# At least one of the agents has resetted the game, get the action(s)
+		print("Initial state observed, get the actions")
+		initial_obs = false
+	elif n_action_steps % action_repeat != 0:
 		if connected and _check_done_from_agents(agents_training):
 			# At least one of the agents has set done to true, initiate the learning asap
 			assert(not keep_action, "keep_action already set to true")
@@ -561,6 +566,7 @@ func _reset_agents_if_done(agents = all_agents):
 	for agent in agents:
 		if agent.get_done():
 			agent.set_done_false()
+			initial_obs = true
 
 
 func _reset_agents(agents = all_agents):
@@ -603,6 +609,7 @@ func _get_done_from_agents(agents: Array = agents_training):
 		var done = agent.get_done()
 		if done:
 			agent.set_done_false()
+			initial_obs = true
 		dones.append(done)
 	return dones
 
