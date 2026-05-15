@@ -54,7 +54,6 @@ var initialized = false
 var just_reset = false
 var onnx_model = null
 var n_action_steps = 0
-var _keep_action = false
 var _initial_obs = false
 
 var _action_space_training: Array[Dictionary] = []
@@ -188,20 +187,15 @@ func _physics_process(_delta):
 
 	_demo_record_process()
 
+	# Has at least one of the agents set done to true? If yes, must initiate the learning asap
+	var connected_and_done = connected and _check_done_from_agents(agents_training)
+
 	if _initial_obs:
-		# At least one of the agents has resetted the game, get the action(s)
-		print("Initial state observed, get the actions")
+		# At least one of the agents has resetted the game, must get the action(s)
 		_initial_obs = false
-	elif n_action_steps % action_repeat != 0:
-		if connected and _check_done_from_agents(agents_training):
-			# At least one of the agents has set done to true, initiate the learning asap
-			assert(not _keep_action, "keep_action already set to true")
-			assert(not _initial_obs, "got an obs that is both a terminal state and an initial state")
-			_keep_action = true
-			print("Train all agents but keep previous actions at n_action_steps: ", n_action_steps)
-		else:
-			n_action_steps += 1
-			return
+	elif n_action_steps % action_repeat != 0 and not connected_and_done:
+		n_action_steps += 1
+		return
 
 	n_action_steps += 1
 
@@ -541,12 +535,8 @@ func handle_message() -> bool:
 		return handle_message()
 
 	if message["type"] == "action":
-		if not _keep_action:
-			var action = message["action"]
-			_set_agent_actions(action, agents_training)
-		else:
-			# keep the previously set action
-			_keep_action = false
+		var action = message["action"]
+		_set_agent_actions(action, agents_training)
 		need_to_send_obs = true
 		get_tree().set_pause(false)
 		return true
