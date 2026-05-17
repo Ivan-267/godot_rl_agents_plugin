@@ -54,7 +54,6 @@ var initialized = false
 var just_reset = false
 var onnx_model = null
 var n_action_steps = 0
-var _initial_obs = false
 
 var _action_space_training: Array[Dictionary] = []
 var _action_space_inference: Array[Dictionary] = []
@@ -190,10 +189,7 @@ func _physics_process(_delta):
 	# Has at least one of the agents set done to true? If yes, must initiate the learning asap
 	var connected_and_done = connected and _check_done_from_agents(agents_training)
 
-	if _initial_obs:
-		# At least one of the agents has resetted the game, must get the action(s)
-		_initial_obs = false
-	elif n_action_steps % action_repeat != 0 and not connected_and_done:
+	if n_action_steps % action_repeat != 0 and not connected_and_done:
 		n_action_steps += 1
 		return
 
@@ -557,7 +553,6 @@ func _reset_agents_if_done(agents = all_agents):
 	for agent in agents:
 		if agent.get_done():
 			agent.set_done_false()
-			_initial_obs = true
 
 
 func _reset_agents(agents = all_agents):
@@ -569,13 +564,7 @@ func _reset_agents(agents = all_agents):
 func _get_obs_from_agents(agents: Array = all_agents):
 	var obs = []
 	for agent in agents:
-		if agent.get_done():
-			# get the observation when the terminal state was observed (done was set to true)
-			var t_obs = agent.get_obs_done()
-			assert(t_obs != {}, "obs_done must not be empty")
-			obs.append(t_obs)
-		else:
-			obs.append(agent.get_obs())
+		obs.append(agent.get_obs())
 	return obs
 
 
@@ -588,10 +577,17 @@ func _get_reward_from_agents(agents: Array = agents_training):
 
 
 func _get_info_from_agents(agents: Array = all_agents):
-	var info = []
+	var infos = []
 	for agent in agents:
-		info.append(agent.get_info())
-	return info
+		var info = agent.get_info()
+		if agent.get_done():
+			# get the observation when the terminal state was observed (done was set to true)
+			var t_obs = agent.get_obs_done()
+			assert(t_obs != {}, "obs_done must not be empty")
+			info["terminal_observation"] = t_obs["obs"]
+			print("Adding terminal_observation to agent info: ", info)
+		infos.append(info)
+	return infos
 
 
 func _get_done_from_agents(agents: Array = agents_training):
@@ -600,7 +596,6 @@ func _get_done_from_agents(agents: Array = agents_training):
 		var done = agent.get_done()
 		if done:
 			agent.set_done_false()
-			_initial_obs = true
 		dones.append(done)
 	return dones
 
