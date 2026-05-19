@@ -42,6 +42,13 @@ var done := false:
 		if done:
 			# store the observation when a terminal state was observed (done was set to true)
 			obs_done = get_obs()
+var truncated := false:
+	get:
+		return truncated
+	set(value):
+		truncated = value
+		if truncated:
+			done = true
 var reward := 0.0
 var n_steps := 0
 var needs_reset := false
@@ -113,6 +120,9 @@ func _physics_process(delta):
 	n_steps += 1
 	if n_steps > reset_after:
 		needs_reset = true
+		assert(obs_done == {})
+		truncated = true
+		assert(obs_done != {})
 
 
 func get_obs_space():
@@ -144,6 +154,14 @@ func get_done():
 
 func set_done_false():
 	done = false
+
+
+func get_truncated():
+	return truncated
+
+
+func set_truncated_false():
+	truncated = false
 
 
 func zero_reward():
