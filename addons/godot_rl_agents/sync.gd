@@ -17,7 +17,7 @@ enum ControlModes {
 @export var onnx_model_path := ""
 ## Whether the inference will be deterministic (NOTE: Only applies to discrete actions in onnx inference mode)
 @export var deterministic_inference := true
-## Whether the observations should be sent when a terminal state was reached (this is needed for truncation support and optionally for custom godot-rl-agents wrappers)
+## Whether the terminal observations should be sent on done or truncated (this is needed for truncation support and optionally for custom godot-rl-agents wrappers)
 @export var send_terminal_obs_info := false
 
 # Onnx model stored for each requested path
