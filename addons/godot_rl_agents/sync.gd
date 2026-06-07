@@ -588,7 +588,7 @@ func _get_info_from_agents(agents: Array = all_agents):
 			var t_obs = agent.get_obs_done()
 			assert(t_obs != {}, "obs_done must not be empty")
 			if send_terminal_obs_info:
-				info["terminal_observation"] = {"obs": t_obs["obs"]}
+				info["terminal_observation"] = t_obs
 				if agent.get_truncated():
 					info["TimeLimit.truncated"] = true
 		infos.append(info)
