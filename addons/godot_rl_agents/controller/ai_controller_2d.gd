@@ -34,7 +34,7 @@ var onnx_model: ONNXModel
 
 var heuristic := "human"
 ## Whether the terminal observations should be stored (set by sync node on ready)
-var store_obs_done = null
+var store_obs_done := false
 var obs_done: Dictionary
 var done := false:
 	get:
